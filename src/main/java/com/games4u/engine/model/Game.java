@@ -30,6 +30,8 @@ public class Game {
         this.released = released;
     }
 
+    public Game (){}
+
 
     // Setters y Getters
     public String getDevelopers() {

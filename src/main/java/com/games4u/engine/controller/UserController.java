@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.games4u.engine.model.Game;
 import com.games4u.engine.model.User;
 import com.games4u.engine.service.UserService;
 
@@ -57,9 +59,21 @@ public class UserController {
      * @return Nodo guardado
      */
     @PostMapping("/add")
-    public ResponseEntity<User> saveGame(@RequestBody User user) {
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
         User savedUser = userService.save(user);
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUserById(@RequestBody Game game, @PathVariable String id){
+        Optional<User> user = userService.findByEmail(id);
+        if (user.isPresent()) {
+            User myUser = user.get();
+            myUser.addGame(game);
+            userService.save(myUser);
+            return new ResponseEntity<>(myUser, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     /**

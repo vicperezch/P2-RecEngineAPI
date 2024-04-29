@@ -2,6 +2,9 @@ package com.games4u.engine.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.games4u.engine.model.Platform;
 import com.games4u.engine.repository.PlatformRepository;
 
@@ -10,6 +13,7 @@ import com.games4u.engine.repository.PlatformRepository;
  * @since 28/04/24
  * Servicio que accede a las plataformas de la base de datos
  */
+@Service
 public class PlatformService {
     private final PlatformRepository platformRepository;
 

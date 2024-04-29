@@ -2,9 +2,6 @@ package com.games4u.engine.model;
 
 import org.springframework.data.neo4j.core.schema.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Victor Pérez
  * @since 23/04/2023
@@ -22,7 +19,6 @@ public class Platform {
     public Platform(String name) {
         this.name = name;
     }
-
 
     // Setters y Getters
     public String getName() {

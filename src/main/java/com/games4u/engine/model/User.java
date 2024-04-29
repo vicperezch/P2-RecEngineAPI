@@ -1,6 +1,9 @@
 package com.games4u.engine.model;
 
+import java.util.List;
+import java.util.ArrayList;
 import org.springframework.data.neo4j.core.schema.*;
+import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
 /**
  * @author Victor Pérez
@@ -9,10 +12,14 @@ import org.springframework.data.neo4j.core.schema.*;
  */
 @Node("User")
 public class User {
+
     @Id
     private String email;
     private String name;
     private String password;
+
+    @Relationship(type = "PLAYS", direction = Direction.OUTGOING)
+    private List<Game> games = new ArrayList<>();
 
 
     /**
@@ -27,6 +34,11 @@ public class User {
         this.password = password;
     }
 
+    public User(){}
+
+    public void addGame(Game game){
+        games.add(game);
+    }
 
     // Setters y Getters
     public String getEmail() {

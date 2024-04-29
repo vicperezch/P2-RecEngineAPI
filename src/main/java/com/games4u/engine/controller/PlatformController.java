@@ -57,7 +57,7 @@ public class PlatformController {
      * @return Nodo guardado
      */
     @PostMapping("/add")
-    public ResponseEntity<Platform> saveGame(@RequestBody Platform platform) {
+    public ResponseEntity<Platform> savePlatform(@RequestBody Platform platform) {
         Platform savedPlatform = platformService.save(platform);
         return new ResponseEntity<>(savedPlatform, HttpStatus.OK);
     }

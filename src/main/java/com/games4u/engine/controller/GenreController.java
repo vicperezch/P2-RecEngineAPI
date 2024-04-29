@@ -57,7 +57,7 @@ public class GenreController {
      * @return Nodo guardado
      */
     @PostMapping("/add")
-    public ResponseEntity<Genre> saveGame(@RequestBody Genre genre) {
+    public ResponseEntity<Genre> saveGenre(@RequestBody Genre genre) {
         Genre savedGenre = genreService.save(genre);
         return new ResponseEntity<>(savedGenre, HttpStatus.OK);
     }
