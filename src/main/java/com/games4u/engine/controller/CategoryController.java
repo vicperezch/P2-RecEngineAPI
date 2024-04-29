@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("api/v1/games")
+@RequestMapping("api/v1/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
