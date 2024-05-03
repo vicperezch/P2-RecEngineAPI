@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import org.springframework.data.neo4j.core.schema.*;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  * @author Victor Pérez
@@ -12,26 +13,28 @@ import org.springframework.data.neo4j.core.schema.Relationship.Direction;
  */
 @Node("User")
 public class User {
-
     @Id
+    private String id;
     private String email;
     private String name;
     private String password;
-
     @Relationship(type = "PLAYS", direction = Direction.OUTGOING)
-    private List<Game> games = new ArrayList<>();
+    private List<Game> games;
 
 
     /**
      * Constructor de clase
+     * @param id ID del usuario
      * @param email Correo electrónico
      * @param name Nombre de usuario
      * @param password Contraseña
      */
-    public User(String email, String name, String password) {
+    public User(String id, String email, String name, String password) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
+        this.games = new ArrayList<>();
     }
 
     public User(){}
@@ -63,5 +66,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
     }
 }

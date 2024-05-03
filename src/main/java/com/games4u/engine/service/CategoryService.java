@@ -35,11 +35,11 @@ public class CategoryService {
      /**
      * Busca una categoría por su nombre.
      *
-     * @param name El nombre de la categoría a buscar.
+     * @param id ID de la categoría a buscar
      * @return Categoría buscada.
      */
-    public Optional<Category> findByName(String name) {
-        return categoryRepository.findById(name);
+    public Optional<Category> findById(String id) {
+        return categoryRepository.findById(id);
     }
 
     /**
@@ -55,9 +55,9 @@ public class CategoryService {
      /**
      * Elimina una categoría por su nombre.
      *
-     * @param name El nombre de la categoría a eliminar.
+     * @param id El ID de la categoría a eliminar.
      */
-    public void deleteById(String name) {
-        categoryRepository.deleteById(name);
+    public void deleteById(String id) {
+        categoryRepository.deleteById(id);
     }
 }

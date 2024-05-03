@@ -37,12 +37,12 @@ public class GenreController {
 
     /**
      * Read: Devuelve un género en específico a través de su nombre
-     * @param name Nombre del género que se busca
+     * @param id ID del género que se busca
      * @return Nodo con el género deseado
      */
     @GetMapping("/{id}")
     public ResponseEntity<Genre> getGenre(@PathVariable String id) {
-        Optional<Genre> genre = genreService.findByName(id);
+        Optional<Genre> genre = genreService.findById(id);
 
         if (genre.isPresent()) {
             return new ResponseEntity<>(genre.get(), HttpStatus.OK);
@@ -59,7 +59,7 @@ public class GenreController {
     @PostMapping("/add")
     public ResponseEntity<Genre> saveGenre(@RequestBody Genre genre) {
         Genre savedGenre = genreService.save(genre);
-        return new ResponseEntity<>(savedGenre, HttpStatus.OK);
+        return new ResponseEntity<>(savedGenre, HttpStatus.CREATED);
     }
 
     /**
@@ -68,7 +68,7 @@ public class GenreController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Genre> deleteGameById(@PathVariable String id) {
-        Optional<Genre> genre = genreService.findByName(id);
+        Optional<Genre> genre = genreService.findById(id);
 
         if (genre.isPresent()) {
             genreService.deleteById(id);

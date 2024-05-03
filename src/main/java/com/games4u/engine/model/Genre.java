@@ -10,14 +10,21 @@ import org.springframework.data.neo4j.core.schema.*;
 @Node("Genre")
 public class Genre {
     @Id
+    private String id;
     private String name;
 
     /**
      * Constructor del nodo género
+     * @param id ID del género
      * @param name Nombre del género
      */
-    public Genre(String name) {
+    public Genre(String id, String name) {
+        this.id = id;
         this.name = name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     /**

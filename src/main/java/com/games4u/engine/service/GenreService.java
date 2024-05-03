@@ -33,11 +33,11 @@ public class GenreService {
 
     /**
      * Devuelve un género en específico a través de su id (nombre)
-     * @param name Nombre del género que se busca
+     * @param id ID del género que se busca
      * @return Nodo con el género deseado
      */
-    public Optional<Genre> findByName(String name) {
-        return genreRepository.findById(name);
+    public Optional<Genre> findById(String id) {
+        return genreRepository.findById(id);
     }
 
     /**
@@ -51,9 +51,9 @@ public class GenreService {
 
     /**
      * Elimina un nodo en base al id
-     * @param name Género que se va a eliminar
+     * @param id Género que se va a eliminar
      */
-    public void deleteById(String name) {
-        genreRepository.deleteById(name);
+    public void deleteById(String id) {
+        genreRepository.deleteById(id);
     }
 }

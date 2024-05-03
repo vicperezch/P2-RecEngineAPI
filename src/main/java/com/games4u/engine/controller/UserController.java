@@ -32,19 +32,19 @@ public class UserController {
      * Read: Devuelve todos los usuarios existentes en la base de datos
      * @return Lista con todos los usuarios
      */
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllCourses() {
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
     }
 
     /**
      * Read: Devuelve un usuario en específico a través de su email
-     * @param email Email del usuario que se busca
+     * @param id ID del usuario que se busca
      * @return Nodo con el usuario deseado
      */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable String id) {
-        Optional<User> user = userService.findByEmail(id);
+        Optional<User> user = userService.findById(id);
 
         if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
@@ -64,9 +64,10 @@ public class UserController {
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUserById(@RequestBody Game game, @PathVariable String id){
-        Optional<User> user = userService.findByEmail(id);
+        Optional<User> user = userService.findById(id);
         if (user.isPresent()) {
             User myUser = user.get();
             myUser.addGame(game);
@@ -78,11 +79,11 @@ public class UserController {
 
     /**
      * Delete: Elimina un nodo en base al email
-     * @param email Usuario que se va a eliminar
+     * @param id Usuario que se va a eliminar
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUserById(@PathVariable String id) {
-        Optional<User> user = userService.findByEmail(id);
+        Optional<User> user = userService.findById(id);
 
         if (user.isPresent()) {
             userService.deleteById(id);

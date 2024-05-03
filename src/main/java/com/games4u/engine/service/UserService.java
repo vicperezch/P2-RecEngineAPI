@@ -32,11 +32,11 @@ public class UserService {
 
     /**
      * Devuelve un usuario en específico a través de su id (email)
-     * @param email Email del usuario que se busca
+     * @param id ID del usuario que se busca
      * @return Nodo con el usuario deseado
      */
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findById(email);
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
     }
 
     /**
@@ -50,9 +50,9 @@ public class UserService {
 
     /**
      * Elimina un nodo en base al id
-     * @param name Usuario que se va a eliminar
+     * @param id Usuario que se va a eliminar
      */
-    public void deleteById(String email) {
-        userRepository.deleteById(email);
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
     }
 }

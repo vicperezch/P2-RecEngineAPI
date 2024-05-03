@@ -10,31 +10,41 @@ import org.springframework.data.neo4j.core.schema.*;
 @Node ("Category")
 public class Category {
     @Id
+    private String id;
     private String mode;
-    private int age_restrict;
+    private int ageRestrict;
 
      /**
      * Constructor de la clase Category.
+      * @param id ID de la categoría
      * @param mode         El modo respectivo a la categoría.
-     * @param age_restrict La restricción de edad de la categoría.
+     * @param ageRestrict La restricción de edad de la categoría.
      */
-    public Category(String mode, int age_restrict){
+    public Category(String id, String mode, int ageRestrict){
+        this.id = id;
         this.mode = mode;
-        this.age_restrict = age_restrict;
+        this.ageRestrict = ageRestrict;
     }
 
     //Getters y setters
+    public String getId() {
+        return id;
+    }
+
     public String getMode(){
         return mode;
     }
+
     public void setMode(String mode){
         this.mode = mode;
     }
-    public int getAge_restrict(){
-        return age_restrict;
+
+    public int getAgeRestrict(){
+        return ageRestrict;
     }
-    public void setAge_restrict(int age_restrict){
-        this.age_restrict = age_restrict;
+
+    public void setAgeRestrict(int ageRestrict){
+        this.ageRestrict = ageRestrict;
     }
 
 }

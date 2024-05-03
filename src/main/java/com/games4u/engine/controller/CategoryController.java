@@ -46,7 +46,7 @@ public class CategoryController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable String id) {
-        Optional<Category> category = categoryService.findByName(id);
+        Optional<Category> category = categoryService.findById(id);
 
         if (category.isPresent()) {
             return new ResponseEntity<>(category.get(), HttpStatus.OK);
@@ -64,7 +64,7 @@ public class CategoryController {
     @PostMapping("/add")
     public ResponseEntity<Category> saveCategory(@RequestBody Category category) {
         Category savedCategory = categoryService.save(category);
-        return new ResponseEntity<>(savedCategory, HttpStatus.OK);
+        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
     /**
@@ -74,7 +74,7 @@ public class CategoryController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Category> deleteCategoryById(@PathVariable String id) {
-        Optional<Category> category = categoryService.findByName(id);
+        Optional<Category> category = categoryService.findById(id);
 
         if (category.isPresent()) {
             categoryService.deleteById(id);
