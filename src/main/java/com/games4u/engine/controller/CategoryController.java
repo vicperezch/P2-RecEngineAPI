@@ -34,7 +34,7 @@ public class CategoryController {
      * @return Lista con todas las categorías almacenadas
      */
     @GetMapping("/all")
-    public ResponseEntity<List<Category>> getAllCourses() {
+    public ResponseEntity<List<Category>> getAllCategories() {
         return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
     }
 

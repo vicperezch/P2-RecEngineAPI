@@ -71,10 +71,10 @@ public class GameController {
      */
     @PutMapping("/{name}")
     public ResponseEntity<Game> updateGame(@PathVariable String name, @RequestBody Game updatedGame) {
-        Optional<Game> oldGame = gameService.findByName(name);
+        Optional<Game> optionalGame = gameService.findByName(name);
 
-        if (oldGame.isPresent()) {
-            Game game = oldGame.get();
+        if (optionalGame.isPresent()) {
+            Game game = optionalGame.get();
 
             game.setAchievements(updatedGame.getAchievements());
             game.setDevelopers(updatedGame.getDevelopers());

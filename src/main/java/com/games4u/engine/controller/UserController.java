@@ -85,27 +85,6 @@ public class UserController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}/")
-    public ResponseEntity<User> updateUserLibrary(@RequestBody Game game, @PathVariable String id){
-        Optional<User> optionalUser = userService.findById(id);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            try {
-                user.addGameToLibrary(game);
-                userService.save(user);
-
-                return new ResponseEntity<>(user, HttpStatus.OK);
-
-            } catch (IllegalArgumentException e) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    }
-
 
     /**
      * Delete: Elimina un nodo en base al email
