@@ -1,6 +1,7 @@
 package com.games4u.engine.model;
 
 import org.springframework.data.neo4j.core.schema.*;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 /**
  * @author Victor Pérez
@@ -9,14 +10,17 @@ import org.springframework.data.neo4j.core.schema.*;
  */
 @Node("Platform")
 public class Platform {
-    @Id
+    @Id @GeneratedValue(UUIDStringGenerator.class)
+    private final String id;
     private String name;
 
     /**
      * Constructor de clase
+     * @param id ID de la plataforma
      * @param name Nombre de la plataforma
      */
-    public Platform(String name) {
+    public Platform(String id, String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -27,5 +31,9 @@ public class Platform {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getId() {
+        return id;
     }
 }

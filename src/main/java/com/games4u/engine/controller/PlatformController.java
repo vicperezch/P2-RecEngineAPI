@@ -20,7 +20,7 @@ public class PlatformController {
 
     /**
      * Constructor del controlador para las plataformas
-     * @param genreService Servicio que maneja las plataformas
+     * @param platformService Servicio que maneja las plataformas
      */
     public PlatformController(PlatformService platformService) {
         this.platformService = platformService;
@@ -30,36 +30,36 @@ public class PlatformController {
      * Read: Devuelve todas las plataformas en la base de datos
      * @return Lista con todas las plataformas
      */
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<List<Platform>> getAllCourses() {
-        return new ResponseEntity<>(platformService.findAllGenres(), HttpStatus.OK);
+        return new ResponseEntity<>(platformService.findAllPlatforms(), HttpStatus.OK);
     }
 
     /**
      * Read: Devuelve una plataforma en específico a través de su nombre
-     * @param name Nombre de la plataforma que se busca
+     * @param id ID de la plataforma que se busca
      * @return Nodo con la plataforma deseada
      */
     @GetMapping("/{id}")
     public ResponseEntity<Platform> getGenre(@PathVariable String id) {
-        Optional<Platform> platform = platformService.findByName(id);
+        Optional<Platform> platform = platformService.findById(id);
 
         if (platform.isPresent()) {
             return new ResponseEntity<>(platform.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     /**
      * Create: Agrega un nodo de tipo plataforma a la base de datos
-     * @param plataforma Plataforma que sea desea agregar
+     * @param platform Plataforma que sea desea agregar
      * @return Nodo guardado
      */
     @PostMapping("/add")
     public ResponseEntity<Platform> savePlatform(@RequestBody Platform platform) {
         Platform savedPlatform = platformService.save(platform);
-        return new ResponseEntity<>(savedPlatform, HttpStatus.OK);
+        return new ResponseEntity<>(savedPlatform, HttpStatus.CREATED);
     }
 
     /**
@@ -68,13 +68,13 @@ public class PlatformController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Platform> deleteGameById(@PathVariable String id) {
-        Optional<Platform> platform = platformService.findByName(id);
+        Optional<Platform> platform = platformService.findById(id);
 
         if (platform.isPresent()) {
             platformService.deleteById(id);
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

@@ -26,7 +26,7 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    public void deleteById(String name) {
+    public void deleteByName(String name) {
         gameRepository.deleteById(name);
     }
 }

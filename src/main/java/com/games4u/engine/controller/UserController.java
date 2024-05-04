@@ -50,7 +50,7 @@ public class UserController {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -61,21 +61,51 @@ public class UserController {
     @PostMapping("/add")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         User savedUser = userService.save(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.OK);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@RequestBody Game game, @PathVariable String id){
-        Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
-            User myUser = user.get();
-            myUser.addGame(game);
-            userService.save(myUser);
-            return new ResponseEntity<>(myUser, HttpStatus.OK);
+    public ResponseEntity<User> updateUserById(@RequestBody User updatedUser, @PathVariable String id){
+        Optional<User> optionalUser = userService.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setName(updatedUser.getName());
+            user.setEmail(updatedUser.getEmail());
+            user.setPassword(updatedUser.getPassword());
+            user.setGames(updatedUser.getGames());
+            user.setLikedGenres(updatedUser.getLikedGenres());
+            user.setLikedGames(updatedUser.getLikedGames());
+
+            userService.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
+
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+
+    @PutMapping("/{id}/")
+    public ResponseEntity<User> updateUserLibrary(@RequestBody Game game, @PathVariable String id){
+        Optional<User> optionalUser = userService.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            try {
+                user.addGameToLibrary(game);
+                userService.save(user);
+
+                return new ResponseEntity<>(user, HttpStatus.OK);
+
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
 
     /**
      * Delete: Elimina un nodo en base al email
@@ -90,7 +120,7 @@ public class UserController {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     
 }

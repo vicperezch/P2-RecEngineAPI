@@ -3,8 +3,7 @@ package com.games4u.engine.model;
 import java.util.List;
 import java.util.ArrayList;
 import org.springframework.data.neo4j.core.schema.*;
-import org.springframework.data.neo4j.core.schema.Relationship.Direction;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 /**
  * @author Victor Pérez
@@ -13,14 +12,17 @@ import org.springframework.web.bind.annotation.CrossOrigin;
  */
 @Node("User")
 public class User {
-    @Id
-    private String id;
+    @Id @GeneratedValue(UUIDStringGenerator.class)
+    private final String id;
     private String email;
     private String name;
     private String password;
-    @Relationship(type = "PLAYS", direction = Direction.OUTGOING)
+    @Relationship(type = "PLAYS", direction = Relationship.Direction.OUTGOING)
     private List<Game> games;
-
+    @Relationship(type = "LIKES", direction = Relationship.Direction.OUTGOING)
+    private List<Game> likedGames;
+    @Relationship(type = "LIKES", direction = Relationship.Direction.OUTGOING)
+    private List<Genre> likedGenres;
 
     /**
      * Constructor de clase
@@ -28,22 +30,51 @@ public class User {
      * @param email Correo electrónico
      * @param name Nombre de usuario
      * @param password Contraseña
+     * @param games Juegos en su biblioteca
+     * @param likedGames Juegos marcados con un like
+     * @param likedGenres Géneros marcados con un like
      */
-    public User(String id, String email, String name, String password) {
+    public User(String id, String email, String name, String password, List<Game> games, List<Game> likedGames, List<Genre> likedGenres) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
-        this.games = new ArrayList<>();
+        this.games = games;
+        this.likedGames = likedGames;
+        this.likedGenres = likedGenres;
     }
 
-    public User(){}
+    public Game addGameToLibrary(Game game){
+        if (games == null) {
+            games = new ArrayList<>();
+        }
 
-    public void addGame(Game game){
-        games.add(game);
+        if (!games.contains(game)) {
+            games.add(game);
+            return game;
+        }
+
+        throw new IllegalArgumentException("The game is already in the user's library!");
+    }
+
+    public Game addLikedGame(Game game){
+        if (likedGames == null) {
+            likedGames = new ArrayList<>();
+        }
+
+        if (!likedGames.contains(game)) {
+            likedGames.add(game);
+            return game;
+        }
+
+        throw new IllegalArgumentException("The user already liked the game!");
     }
 
     // Setters y Getters
+    public String getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -74,5 +105,21 @@ public class User {
 
     public void setGames(List<Game> games) {
         this.games = games;
+    }
+
+    public List<Game> getLikedGames() {
+        return likedGames;
+    }
+
+    public void setLikedGames(List<Game> likedGames) {
+        this.likedGames = likedGames;
+    }
+
+    public List<Genre> getLikedGenres() {
+        return likedGenres;
+    }
+
+    public void setLikedGenres(List<Genre> likedGenres) {
+        this.likedGenres = likedGenres;
     }
 }

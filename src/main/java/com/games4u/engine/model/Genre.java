@@ -1,6 +1,7 @@
 package com.games4u.engine.model;
 
 import org.springframework.data.neo4j.core.schema.*;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 /**
  * @author Nils Muralles
@@ -9,7 +10,7 @@ import org.springframework.data.neo4j.core.schema.*;
  */
 @Node("Genre")
 public class Genre {
-    @Id
+    @Id @GeneratedValue(UUIDStringGenerator.class)
     private String id;
     private String name;
 

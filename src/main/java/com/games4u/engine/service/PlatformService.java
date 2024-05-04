@@ -29,17 +29,17 @@ public class PlatformService {
      * Devuelve todos las plataformas existentes en la base de datos
      * @return Lista con todos los nodos de plataforma
      */
-    public List<Platform> findAllGenres() {
+    public List<Platform> findAllPlatforms() {
         return platformRepository.findAll();
     }
 
     /**
      * Devuelve una plataforma en específico a través de su id (nombre)
-     * @param name Nombre de la plataforma que se busca
+     * @param id ID de la plataforma que se busca
      * @return Nodo con la plataforma deseada
      */
-    public Optional<Platform> findByName(String name) {
-        return platformRepository.findById(name);
+    public Optional<Platform> findById(String id) {
+        return platformRepository.findById(id);
     }
 
     /**
@@ -47,15 +47,15 @@ public class PlatformService {
      * @param platform Género que sea desea agregar
      * @return Nodo guardado
      */
-    public Platform save(Platform plataforma) {
-        return platformRepository.save(plataforma);
+    public Platform save(Platform platform) {
+        return platformRepository.save(platform);
     }
 
     /**
      * Elimina un nodo en base al id
-     * @param name Plataforma que se va a eliminar
+     * @param id Plataforma que se va a eliminar
      */
-    public void deleteById(String name) {
-        platformRepository.deleteById(name);
+    public void deleteById(String id) {
+        platformRepository.deleteById(id);
     }
 }

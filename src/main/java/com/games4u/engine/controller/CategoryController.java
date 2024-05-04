@@ -33,7 +33,7 @@ public class CategoryController {
      * Obtiene todas las categorías en la base de datos
      * @return Lista con todas las categorías almacenadas
      */
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<List<Category>> getAllCourses() {
         return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
     }
@@ -52,7 +52,7 @@ public class CategoryController {
             return new ResponseEntity<>(category.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
 
@@ -81,6 +81,6 @@ public class CategoryController {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

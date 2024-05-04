@@ -1,6 +1,7 @@
 package com.games4u.engine.model;
 
 import org.springframework.data.neo4j.core.schema.*;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 /**
  * @author Renato Rojas
@@ -9,8 +10,8 @@ import org.springframework.data.neo4j.core.schema.*;
  */
 @Node ("Category")
 public class Category {
-    @Id
-    private String id;
+    @Id @GeneratedValue(UUIDStringGenerator.class)
+    private final String id;
     private String mode;
     private int ageRestrict;
 

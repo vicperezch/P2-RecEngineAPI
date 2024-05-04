@@ -28,8 +28,8 @@ public class GameController {
      * Obtiene todos los juegos en la base de datos
      * @return Lista con todos los juegos almacenados
      */
-    @GetMapping("/")
-    public ResponseEntity<List<Game>> getAllCourses() {
+    @GetMapping("/all")
+    public ResponseEntity<List<Game>> getAllGames() {
         return new ResponseEntity<>(gameService.findAllGames(), HttpStatus.OK);
     }
 
@@ -47,7 +47,7 @@ public class GameController {
             return new ResponseEntity<>(game.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
 
@@ -59,19 +59,19 @@ public class GameController {
     @PostMapping("/add")
     public ResponseEntity<Game> saveGame(@RequestBody Game game) {
         Game savedGame = gameService.save(game);
-        return new ResponseEntity<>(savedGame, HttpStatus.OK);
+        return new ResponseEntity<>(savedGame, HttpStatus.CREATED);
     }
 
 
     /**
      * Actualiza un juego en la base de datos
-     * @param id ID del juego a actualizar
+     * @param name ID (nombre) del juego a actualizar
      * @param updatedGame Instancia con los atributos nuevos
      * @return Juego actualizado
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Game> updateGame(@PathVariable String id, @RequestBody Game updatedGame) {
-        Optional<Game> oldGame = gameService.findByName(id);
+    @PutMapping("/{name}")
+    public ResponseEntity<Game> updateGame(@PathVariable String name, @RequestBody Game updatedGame) {
+        Optional<Game> oldGame = gameService.findByName(name);
 
         if (oldGame.isPresent()) {
             Game game = oldGame.get();
@@ -79,28 +79,31 @@ public class GameController {
             game.setAchievements(updatedGame.getAchievements());
             game.setDevelopers(updatedGame.getDevelopers());
             game.setReleased(updatedGame.getReleased());
+            game.setCategories(updatedGame.getCategories());
+            game.setGenres(updatedGame.getGenres());
+            game.setPlatforms(updatedGame.getPlatforms());
 
             return new ResponseEntity<>(gameService.save(game), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
 
     /**
      * Elimina un juego de la base de datos
-     * @param id ID del juego a eliminar
+     * @param name ID del juego a eliminar
      * @return Estado de la petición
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Game> deleteGameById(@PathVariable String id) {
-        Optional<Game> game = gameService.findByName(id);
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Game> deleteGameById(@PathVariable String name) {
+        Optional<Game> game = gameService.findByName(name);
 
         if (game.isPresent()) {
-            gameService.deleteById(id);
+            gameService.deleteByName(name);
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }
