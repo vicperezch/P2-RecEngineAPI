@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.games4u.engine.model.Game;
 import com.games4u.engine.model.User;
 import com.games4u.engine.service.UserService;
 

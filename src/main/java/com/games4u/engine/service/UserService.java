@@ -39,6 +39,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     /**
      * Agrega un nodo de tipo usuario a la base de datos
      * @param user Usuario que sea desea agregar
