@@ -2,10 +2,16 @@ package com.games4u.engine.controller;
 
 import com.games4u.engine.model.Game;
 import com.games4u.engine.service.GameService;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +20,7 @@ import java.util.Optional;
  * @since 26/04/2024
  * Controlador que contiene la funcionalidad CRUD para los juegos
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("api/v1/games")
 public class GameController {
@@ -105,5 +112,36 @@ public class GameController {
         }
 
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+     
+    @GetMapping("/covers/{name}")
+    public ResponseEntity<HashMap<String, String>> getCovers(@PathVariable String name) {
+        String url = "https://api.igdb.com/v4/games";
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Client-ID", "k8tm82c27irp6exhwa5kab0amfxysz");
+        headers.set("Authorization", "Bearer 0c14vgwyrwm2vth12b6qza2bebezcp");
+        headers.set("Content-Type", "text/plain");
+        headers.set("Accept", "*/*");
+        
+        String body = "search \"" + name + "\";\nfields name, cover.url;\"";
+        
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        
+        ResponseEntity<Object[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Object[].class, HttpStatus.OK);
+
+        HashMap<String, String> idImagePairs = new HashMap<>();
+        
+        for (int i = 0; i < response.getBody().length; i++) {
+            String rawData = response.getBody()[i].toString();
+            if (rawData.contains("cover")) {
+                String k = rawData.substring(rawData.indexOf("name=") + 5, rawData.lastIndexOf("}")); 
+                String v = (rawData.substring(rawData.indexOf("url=") + 4, rawData.indexOf(".jpg") + 4)).replace("thumb", "cover_big");
+                idImagePairs.put(k, v);
+            }
+        }
+
+        return new ResponseEntity<>(idImagePairs, HttpStatus.OK);
     }
 }

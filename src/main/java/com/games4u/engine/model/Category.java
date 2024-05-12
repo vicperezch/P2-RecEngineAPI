@@ -13,18 +13,15 @@ public class Category {
     @Id @GeneratedValue(UUIDStringGenerator.class)
     private final String id;
     private String mode;
-    private int ageRestrict;
 
      /**
      * Constructor de la clase Category.
       * @param id ID de la categoría
      * @param mode         El modo respectivo a la categoría.
-     * @param ageRestrict La restricción de edad de la categoría.
      */
-    public Category(String id, String mode, int ageRestrict){
+    public Category(String id, String mode){
         this.id = id;
         this.mode = mode;
-        this.ageRestrict = ageRestrict;
     }
 
     //Getters y setters
@@ -38,14 +35,6 @@ public class Category {
 
     public void setMode(String mode){
         this.mode = mode;
-    }
-
-    public int getAgeRestrict(){
-        return ageRestrict;
-    }
-
-    public void setAgeRestrict(int ageRestrict){
-        this.ageRestrict = ageRestrict;
     }
 
 }

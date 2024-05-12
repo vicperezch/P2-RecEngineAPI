@@ -9,7 +9,7 @@ import com.games4u.engine.model.User;
 import com.games4u.engine.service.UserService;
 
 /**
- * @author 
+ * @author Nils Muralles
  * @since 04/05/24
  * Controlador que se encarga de la autenticación de usuarios
  */
