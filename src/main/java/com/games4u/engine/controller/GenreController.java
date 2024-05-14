@@ -30,8 +30,8 @@ public class GenreController {
      * Read: Devuelve todos los géneros existentes en la base de datos
      * @return Lista con todos los géneros
      */
-    @GetMapping("/")
-    public ResponseEntity<List<Genre>> getAllCourses() {
+    @GetMapping("/all")
+    public ResponseEntity<List<Genre>> getAllGenres() {
         return new ResponseEntity<>(genreService.findAllGenres(), HttpStatus.OK);
     }
 

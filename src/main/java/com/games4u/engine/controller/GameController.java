@@ -83,9 +83,9 @@ public class GameController {
         if (optionalGame.isPresent()) {
             Game game = optionalGame.get();
 
-            game.setAchievements(updatedGame.getAchievements());
             game.setDevelopers(updatedGame.getDevelopers());
             game.setReleased(updatedGame.getReleased());
+            game.setRating(updatedGame.getRating());
             game.setCategories(updatedGame.getCategories());
             game.setGenres(updatedGame.getGenres());
             game.setPlatforms(updatedGame.getPlatforms());
@@ -120,8 +120,8 @@ public class GameController {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Client-ID", "k8tm82c27irp6exhwa5kab0amfxysz");
-        headers.set("Authorization", "Bearer 0c14vgwyrwm2vth12b6qza2bebezcp");
+        headers.set("Client-ID", "");
+        headers.set("Authorization", "");
         headers.set("Content-Type", "text/plain");
         headers.set("Accept", "*/*");
         

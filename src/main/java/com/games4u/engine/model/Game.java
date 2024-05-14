@@ -13,8 +13,8 @@ public class Game {
     @Id
     private final String name;
     private String developers;
-    private int achievements;
     private String released;
+    private String rating;
     @Relationship(type = "BELONGS_TO", direction = Relationship.Direction.OUTGOING)
     private List<Genre> genres;
     @Relationship(type = "AVAILABLE_ON", direction = Relationship.Direction.OUTGOING)
@@ -27,17 +27,17 @@ public class Game {
      * Constructor de clase
      * @param name Título del juego
      * @param developers Nombre del desarrollador
-     * @param achievements Número de logros
      * @param released Fecha de lanzamiento
+     * @param rating Rating del juego
      * @param genres Lista de géneros del juego
      * @param platforms Lista de plataformas donde está disponible
      * @param categories Listado de categorías a las que pertenece
      */
-    public Game(String name, String developers, int achievements, String released, List<Genre> genres, List<Platform> platforms, List<Category> categories) {
+    public Game(String name, String developers, String released, String rating, List<Genre> genres, List<Platform> platforms, List<Category> categories) {
         this.name = name;
         this.developers = developers;
-        this.achievements = achievements;
         this.released = released;
+        this.rating = rating;
         this.genres = genres;
         this.platforms = platforms;
         this.categories = categories;
@@ -57,14 +57,6 @@ public class Game {
         this.developers = developers;
     }
 
-    public int getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(int achievements) {
-        this.achievements = achievements;
-    }
-
     public String getReleased() {
         return released;
     }
@@ -79,6 +71,15 @@ public class Game {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     public List<Platform> getPlatforms() {
