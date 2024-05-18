@@ -26,6 +26,7 @@ public class RecommendationService {
     public List<String> recommendGames(String email) {
         List<Game> userLikedGames = getUserLikedGames(email);
 
+        // Obtiene los géneros principales del usuario
         List<String> genres = new ArrayList<>();
         for (Game userLikedGame : userLikedGames) {
             genres.add(userLikedGame.getGenre().getName());
@@ -33,6 +34,7 @@ public class RecommendationService {
 
         genres = Sorter.getTopOccurrences(genres);
 
+        // Calcula un coeficiente para cada juego
         Map<String, Double> gameCoefficients = new HashMap<>();
         for (Game game: userLikedGames) {
             for (int i = 0; i < 3; i++) {
@@ -46,6 +48,7 @@ public class RecommendationService {
             }
         }
 
+        // Ordena los juegos según el coeficiente
         List<String> recommendedGames = Sorter.sortByValue(gameCoefficients);
         for (Game userGame : userLikedGames) {
             recommendedGames.remove(userGame.getName());

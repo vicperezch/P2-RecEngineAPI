@@ -48,9 +48,11 @@ public class Sorter {
      * @return Lista con las llaves que tienen los valores más altos
      */
     public static <K, V extends Comparable<? super V>> List<K> sortByValue(Map<K, V> map) {
+        // Ordena una lista con las entradas del map
         List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
         list.sort(Entry.comparingByValue());
 
+        // Obtiene únicamente las llaves
         List<K> topKeys = new ArrayList<>();
         for (Entry<K, V> entry: list) {
             topKeys.add(entry.getKey());
