@@ -17,8 +17,8 @@ public class RecommendationController {
     }
 
 
-    @GetMapping("/")
-    public ResponseEntity<List<String>> getSim(@RequestParam String email) {
+    @GetMapping("/{email}")
+    public ResponseEntity<List<String>> getRecommendations(@PathVariable String email) {
         return new ResponseEntity<>(recommendationService.recommendGames(email), HttpStatus.OK);
     }
 }

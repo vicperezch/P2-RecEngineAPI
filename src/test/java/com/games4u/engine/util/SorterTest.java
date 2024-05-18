@@ -19,11 +19,11 @@ public class SorterTest {
 
     @Test
     public void testSortByValue() {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("A", 1);
-        map.put("B", 2);
-        map.put("C", 3);
+        Map<String, Double> map = new HashMap<>();
+        map.put("A", 0.2);
+        map.put("B", 0.4);
+        map.put("C", 1.0);
         List<String> sortedKeys = Sorter.sortByValue(map);
-        assertEquals(Arrays.asList("A", "B", "C"), sortedKeys);
+        assertEquals(Arrays.asList("C", "B", "A"), sortedKeys);
     }
 }

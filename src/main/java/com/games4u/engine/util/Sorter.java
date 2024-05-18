@@ -55,7 +55,7 @@ public class Sorter {
         // Obtiene únicamente las llaves
         List<K> topKeys = new ArrayList<>();
         for (Entry<K, V> entry: list) {
-            topKeys.add(entry.getKey());
+            topKeys.addFirst(entry.getKey());
         }
 
         return topKeys;
