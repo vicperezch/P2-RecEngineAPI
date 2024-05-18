@@ -87,7 +87,7 @@ public class GameController {
             game.setReleased(updatedGame.getReleased());
             game.setRating(updatedGame.getRating());
             game.setCategories(updatedGame.getCategories());
-            game.setGenres(updatedGame.getGenres());
+            game.setGenre(updatedGame.getGenre());
             game.setPlatforms(updatedGame.getPlatforms());
 
             return new ResponseEntity<>(gameService.save(game), HttpStatus.OK);

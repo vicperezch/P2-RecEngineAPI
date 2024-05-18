@@ -16,8 +16,8 @@ public class Game {
     private String released;
     private String rating;
     @Relationship(type = "BELONGS_TO", direction = Relationship.Direction.OUTGOING)
-    private List<Genre> genres;
-    @Relationship(type = "AVAILABLE_ON", direction = Relationship.Direction.OUTGOING)
+    private Genre genre;
+    @Relationship(type = "IS_AVAILABLE", direction = Relationship.Direction.OUTGOING)
     private List<Platform> platforms;
     @Relationship(type = "CLASSIFIED_AS", direction = Relationship.Direction.OUTGOING)
     private List<Category> categories;
@@ -29,16 +29,16 @@ public class Game {
      * @param developers Nombre del desarrollador
      * @param released Fecha de lanzamiento
      * @param rating Rating del juego
-     * @param genres Lista de géneros del juego
+     * @param genre Género del juego
      * @param platforms Lista de plataformas donde está disponible
      * @param categories Listado de categorías a las que pertenece
      */
-    public Game(String name, String developers, String released, String rating, List<Genre> genres, List<Platform> platforms, List<Category> categories) {
+    public Game(String name, String developers, String released, String rating, Genre genre, List<Platform> platforms, List<Category> categories) {
         this.name = name;
         this.developers = developers;
         this.released = released;
         this.rating = rating;
-        this.genres = genres;
+        this.genre = genre;
         this.platforms = platforms;
         this.categories = categories;
     }
@@ -65,12 +65,12 @@ public class Game {
         this.released = released;
     }
 
-    public List<Genre> getGenres() {
-        return genres;
+    public Genre getGenre() {
+        return genre;
     }
 
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     public String getRating() {
