@@ -1,7 +1,11 @@
 package com.games4u.engine.controller;
 
 import com.games4u.engine.service.RecommendationService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/recommendations")
@@ -14,8 +18,7 @@ public class RecommendationController {
 
 
     @GetMapping("/")
-    public void getSim(@RequestParam String email) {
-
-        recommendationService.recommendGames(email);
+    public ResponseEntity<List<String>> getSim(@RequestParam String email) {
+        return new ResponseEntity<>(recommendationService.recommendGames(email), HttpStatus.OK);
     }
 }

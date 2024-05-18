@@ -1,9 +1,7 @@
 package com.games4u.engine.service;
 
-import com.games4u.engine.model.Category;
-import com.games4u.engine.model.Game;
-import com.games4u.engine.model.Platform;
-import com.games4u.engine.model.User;
+import com.games4u.engine.model.*;
+import com.games4u.engine.util.Sorter;
 import com.games4u.engine.repository.GameRepository;
 import com.games4u.engine.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,37 +19,39 @@ public class RecommendationService {
     }
 
 
-    public void recommendGames(String email) {
+    /**
+     * Obtiene una lista de juegos a recomendar
+     * @param email Email del usuario a quien se le recomendará
+     */
+    public List<String> recommendGames(String email) {
         List<Game> userLikedGames = getUserLikedGames(email);
-        Map<String, Integer> frequencies = new HashMap<>();
 
+        List<String> genres = new ArrayList<>();
+        for (Game userLikedGame : userLikedGames) {
+            genres.add(userLikedGame.getGenre().getName());
+        }
+
+        genres = Sorter.getTopOccurrences(genres);
+
+        Map<String, Double> gameCoefficients = new HashMap<>();
         for (Game game: userLikedGames) {
-            Integer j = frequencies.get(game.getGenre().getName());
-            if (j == null) {
-                frequencies.put(game.getGenre().getName(), 1);
-
-            } else {
-                frequencies.put(game.getGenre().getName(), j + 1);
+            for (int i = 0; i < 3; i++) {
+                List<Game> gamesToCompare = gameRepository.findBySortedGenre(genres.get(i));
+                for (Game game2 : gamesToCompare) {
+                    double sim = getSimilarity(game, game2);
+                    if (gameCoefficients.get(game2.getName()) == null || sim > gameCoefficients.get(game2.getName())) {
+                        gameCoefficients.put(game2.getName(), sim);
+                    }
+                }
             }
         }
 
-        PriorityQueue<String> heap = new PriorityQueue<>((a, b) -> frequencies.get(b) - frequencies.get(a));
-        heap.addAll(frequencies.keySet());
-
-        List<String> topGenres = new ArrayList<>();
-        for (int i = 0; i < 3 && !heap.isEmpty(); i++) {
-            topGenres.add(heap.poll());
+        List<String> recommendedGames = Sorter.sortByValue(gameCoefficients);
+        for (Game userGame : userLikedGames) {
+            recommendedGames.remove(userGame.getName());
         }
 
-        List<Game> gamesWithTopGenre1 = gameRepository.findBySortedGenre(topGenres.get(0));
-        List<Game> gamesWithTopGenre2 = gameRepository.findBySortedGenre(topGenres.get(1));
-        List<Game> gamesWithTopGenre3 = gameRepository.findBySortedGenre(topGenres.get(2));
-
-        for (Game game: userLikedGames) {
-            for (Game game2: gamesWithTopGenre1) {
-                getSimilarity(game, game2);
-            }
-        }
+        return recommendedGames;
     }
 
 
@@ -60,7 +60,7 @@ public class RecommendationService {
      * @param email Email del usuario
      * @return Lista de juegos que posee
      */
-    public List<Game> getUserLikedGames(String email) {
+    private List<Game> getUserLikedGames(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (optionalUser.isPresent()) {
@@ -73,12 +73,19 @@ public class RecommendationService {
     }
 
 
-    public double getSimilarity(Game game1, Game game2) {
+    /**
+     * Determina la similaridad entre dos nodos a través de sus vecinos
+     * @param game1 Primer juego a comparar
+     * @param game2 Segundo juego a comparar
+     * @return coeficiente de similaridad de 0 a 1
+     */
+    private double getSimilarity(Game game1, Game game2) {
         double intersection = 0;
-        double union = 1;
+        double union = 2;
 
         if (game1.getGenre().equals(game2.getGenre())) {
             intersection++;
+            union--;
         }
 
         List<Platform> platforms1 = game1.getPlatforms();
@@ -88,8 +95,11 @@ public class RecommendationService {
             for (Platform platform2 : platforms2) {
                 if (platform.getName().equals(platform2.getName())) {
                     intersection++;
+                    union--;
                 }
             }
+
+            union++;
         }
 
         List<Category> categories1 = game1.getCategories();
@@ -97,17 +107,17 @@ public class RecommendationService {
 
         for (Category category : categories1) {
             for (Category category2 : categories2) {
-                if (category.equals(category2)) {
+                if (category.getMode().equals(category2.getMode())) {
                     intersection++;
-                    System.out.println("si");
+                    union--;
                 }
             }
+
+            union++;
         }
 
-        union += platforms1.size();
         union += categories2.size();
         union += platforms2.size();
-        union += categories1.size();
 
         return intersection / union;
     }
