@@ -76,6 +76,8 @@ public class UserController {
             user.setGames(updatedUser.getGames());
             user.setLikedGenres(updatedUser.getLikedGenres());
             user.setLikedGames(updatedUser.getLikedGames());
+            user.setLikedPlatforms(updatedUser.getLikedPlatforms());
+            user.setLikedCategories(updatedUser.getLikedCategories());
 
             userService.save(user);
             return new ResponseEntity<>(user, HttpStatus.OK);

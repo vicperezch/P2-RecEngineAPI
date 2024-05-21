@@ -31,7 +31,7 @@ public class UserService {
     }
 
     /**
-     * Devuelve un usuario en específico a través de su id (email)
+     * Devuelve un usuario en específico a través de su id email
      * @param id ID del usuario que se busca
      * @return Nodo con el usuario deseado
      */
@@ -39,6 +39,11 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    /**
+     * Devuelve un usuario en específico a través de su email
+     * @param email email del usuario deseado
+     * @return Nodo con el usuario deseado
+     */
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

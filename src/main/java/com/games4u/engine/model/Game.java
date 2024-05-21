@@ -17,10 +17,10 @@ public class Game {
     private String rating;
     @Relationship(type = "BELONGS_TO", direction = Relationship.Direction.OUTGOING)
     private Genre genre;
-    @Relationship(type = "IS_AVAILABLE", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "AVAILABLE_ON", direction = Relationship.Direction.OUTGOING)
     private List<Platform> platforms;
     @Relationship(type = "CLASSIFIED_AS", direction = Relationship.Direction.OUTGOING)
-    private List<Category> categories;
+    private List<Category> categories;  
 
 
     /**

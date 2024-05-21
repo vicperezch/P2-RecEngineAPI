@@ -23,6 +23,10 @@ public class User {
     private List<Game> likedGames;
     @Relationship(type = "LIKES", direction = Relationship.Direction.OUTGOING)
     private List<Genre> likedGenres;
+    @Relationship(type = "LIKES", direction = Relationship.Direction.OUTGOING)
+    private List<Platform> likedPlatforms;
+    @Relationship(type = "LIKES", direction = Relationship.Direction.OUTGOING)
+    private List<Category> likedCategories;
 
     /**
      * Constructor de clase
@@ -32,9 +36,11 @@ public class User {
      * @param password Contraseña
      * @param games Juegos en su biblioteca
      * @param likedGames Juegos marcados con un like
-     * @param likedGenres Géneros marcados con un like
+     * @param likedGenres Géneros que le gustan al usuario
+     * @param likedPlatforms Plataformas que le gustan al usuario
+     * @param likedCategories Categorías que le gustan al usuario
      */
-    public User(String id, String email, String name, String password, List<Game> games, List<Game> likedGames, List<Genre> likedGenres) {
+    public User(String id, String email, String name, String password, List<Game> games, List<Game> likedGames, List<Genre> likedGenres, List<Platform> likedPlatforms, List<Category> likedCategories) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -42,6 +48,8 @@ public class User {
         this.games = games;
         this.likedGames = likedGames;
         this.likedGenres = likedGenres;
+        this.likedPlatforms = likedPlatforms;
+        this.likedCategories = likedCategories;
     }
 
     public Game addGameToLibrary(Game game){
@@ -121,5 +129,21 @@ public class User {
 
     public void setLikedGenres(List<Genre> likedGenres) {
         this.likedGenres = likedGenres;
+    }
+
+    public List<Platform> getLikedPlatforms() {
+        return likedPlatforms;
+    }
+
+    public void setLikedPlatforms(List<Platform> likedPlatforms) {
+        this.likedPlatforms = likedPlatforms;
+    }
+
+    public List<Category> getLikedCategories() {
+        return likedCategories;
+    }
+
+    public void setLikedCategories(List<Category> likedCategories) {
+        this.likedCategories = likedCategories;
     }
 }
