@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * @author Victor Pérez
+ * @since 20/05/2024
+ */
 @Service
 public class RecommendationService {
     private final GameRepository gameRepository;
@@ -20,56 +24,22 @@ public class RecommendationService {
 
 
     /**
-     * Obtiene una lista de juegos a recomendar
-     * @param email Email del usuario a quien se le recomendará
+     * Evalúa el usuario y selecciona el algoritmo a utilizar
+     * @param email Email del usuario a recomendar
+     * @return Lista de recomendaciones
      */
-    public List<String> recommendGames(String email) {
-        List<Game> userLikedGames = getUserLikedGames(email);
-
-        // Obtiene los géneros principales del usuario
-        List<String> genres = new ArrayList<>();
-        for (Game userLikedGame : userLikedGames) {
-            genres.add(userLikedGame.getGenre().getName());
-        }
-
-        genres = Sorter.getTopOccurrences(genres);
-
-        // Calcula un coeficiente para cada juego
-        Map<String, Double> gameCoefficients = new HashMap<>();
-        for (Game game: userLikedGames) {
-            for (int i = 0; i < 3; i++) {
-                List<Game> gamesToCompare = gameRepository.findBySortedGenre(genres.get(i));
-                for (Game game2 : gamesToCompare) {
-                    double sim = getSimilarity(game, game2);
-                    if (gameCoefficients.get(game2.getName()) == null || sim > gameCoefficients.get(game2.getName())) {
-                        gameCoefficients.put(game2.getName(), sim);
-                    }
-                }
-            }
-        }
-
-        // Ordena los juegos según el coeficiente
-        List<String> recommendedGames = Sorter.sortByValue(gameCoefficients);
-        for (Game userGame : userLikedGames) {
-            recommendedGames.remove(userGame.getName());
-        }
-
-        return recommendedGames;
-    }
-
-
-    /**
-     * Obtiene los juegos de un usuario
-     * @param email Email del usuario
-     * @return Lista de juegos que posee
-     */
-    private List<Game> getUserLikedGames(String email) {
+    public List<Game> recommend(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            return user.getLikedGames();
+            if (user.getLikedGames() == null || user.getLikedGames().size() < 10) {
+                return initialRecommendation(user);
+
+            }
+
+            return betterRecommendation(user);
         }
 
         return null;
@@ -77,51 +47,117 @@ public class RecommendationService {
 
 
     /**
-     * Determina la similaridad entre dos nodos a través de sus vecinos
-     * @param game1 Primer juego a comparar
-     * @param game2 Segundo juego a comparar
+     * Recomienda juegos cuando el usuario no tiene suficientes datos
+     * @param user Usuario a recomendar
+     * @return Lista de recomendaciones
+     */
+    public List<Game> initialRecommendation(User user) {
+        Map<Game, Double> similarities = new HashMap<>();
+
+        List<String> userGenres = user.getLikedGenres().stream().map(Genre::getName).toList();
+        List<String> userCategories = user.getLikedCategories().stream().map(Category::getMode).toList();
+        List<String> userPlatforms = user.getLikedPlatforms().stream().map(Platform::getName).toList();
+        List<String> userGames = user.getGames().stream().map(Game::getName).toList();
+
+        // Busca cada juego en la base de datos y compara con los gustos del usuario
+        for (String genre: userGenres) {
+            List<String> gamesToCompare = gameRepository.findByGenreSorted(genre);
+
+            for (String gameTitle : gamesToCompare) {
+                if (!userGames.contains(gameTitle)) {
+                    Game game = gameRepository.findById(gameTitle).get();
+
+                    double similarityScore = getSimilarity(game, userGenres, userCategories, userPlatforms);
+                    similarities.put(game, similarityScore);
+                }
+            }
+        }
+
+        for (Map.Entry<Game, Double> entry : similarities.entrySet()) {
+            System.out.println(entry.getKey().getName() + " " + entry.getValue());
+        }
+
+        List<Game> recommendedGames = Sorter.sortByValue(similarities);
+
+        return recommendedGames.subList(0, 14);
+    }
+
+
+    /**
+     * Obtiene una lista de juegos a recomendar
+     * @param user Usuario al que se le recomendará
+     */
+    public List<Game> betterRecommendation(User user) {
+        List<Game> userLikedGames = user.getLikedGames();
+        List<String> userGames = user.getGames().stream().map(Game::getName).toList();
+
+        // Obtener las preferencias del usuario
+        List<String> genres = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
+        List<String> platforms = new ArrayList<>();
+        for (Game userLikedGame : userLikedGames) {
+            genres.add(userLikedGame.getGenre().getName());
+            categories.addAll(userLikedGame.getCategories().stream().map(Category::getMode).toList());
+            platforms.addAll(userLikedGame.getPlatforms().stream().map(Platform::getName).toList());
+        }
+
+        genres = Sorter.getTopOccurrences(genres);
+        categories = Sorter.getTopOccurrences(categories);
+        platforms = Sorter.getTopOccurrences(platforms);
+
+        // Calcula un coeficiente para cada juego
+        Map<Game, Double> gameCoefficients = new HashMap<>();
+        for (int i = 0; i < 3; i++) {
+            List<String> gamesToCompare = gameRepository.findByGenreSorted(genres.get(i));
+
+            for (String gameTitle: gamesToCompare) {
+                if (!userGames.contains(gameTitle)) {
+                    Game game = gameRepository.findById(gameTitle).get();
+
+                    double similarityScore = getSimilarity(game, genres, categories, platforms);
+                    gameCoefficients.put(game, similarityScore);
+                }
+            }
+        }
+
+        // Ordena los juegos según el coeficiente
+        List<Game> recommendedGames = Sorter.sortByValue(gameCoefficients);
+
+        return recommendedGames.subList(0, 14);
+    }
+
+
+    /**
+     * Determina la similaridad entre un juego y los gustos del usuario
+     * @param game Juego a comparar
+     * @param genres Géneros preferidos del usuario
+     * @param categories Categorias preferidas del usuario
+     * @param platforms Plataformas preferidas del usuario
      * @return coeficiente de similaridad de 0 a 1
      */
-    private double getSimilarity(Game game1, Game game2) {
+    private double getSimilarity(Game game, List<String> genres, List<String> categories, List<String> platforms) {
         double intersection = 0;
-        double union = 2;
+        double total = 1;
 
-        if (game1.getGenre().equals(game2.getGenre())) {
+        if (genres.contains(game.getGenre().getName())) {
             intersection++;
-            union--;
         }
 
-        List<Platform> platforms1 = game1.getPlatforms();
-        List<Platform> platforms2 = game2.getPlatforms();
-
-        for (Platform platform : platforms1) {
-            for (Platform platform2 : platforms2) {
-                if (platform.getName().equals(platform2.getName())) {
-                    intersection++;
-                    union--;
-                }
+        for (Category category: game.getCategories()) {
+            if (categories.contains(category.getMode())) {
+                intersection++;
             }
-
-            union++;
         }
 
-        List<Category> categories1 = game1.getCategories();
-        List<Category> categories2 = game2.getCategories();
-
-        for (Category category : categories1) {
-            for (Category category2 : categories2) {
-                if (category.getMode().equals(category2.getMode())) {
-                    intersection++;
-                    union--;
-                }
+        for (Platform platform: game.getPlatforms()) {
+            if (platforms.contains(platform.getName())) {
+                intersection++;
             }
-
-            union++;
         }
 
-        union += categories2.size();
-        union += platforms2.size();
+        total += game.getCategories().size();
+        total += game.getPlatforms().size();
 
-        return intersection / union;
+        return intersection / total;
     }
 }

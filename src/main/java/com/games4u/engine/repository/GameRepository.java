@@ -7,6 +7,6 @@ import org.springframework.data.neo4j.repository.query.Query;
 import java.util.List;
 
 public interface GameRepository extends Neo4jRepository<Game, String> {
-    @Query("MATCH (g:Game)-[r:BELONGS_TO]->(gn:Genre {name: $genre}) RETURN g ORDER BY g.rating DESC LIMIT 5")
-    List<Game> findBySortedGenre(String genre);
+    @Query("MATCH (g:Game)-[]->(:Genre {name: $genre}) RETURN g.name ORDER BY g.rating DESC LIMIT 10")
+    List<String> findByGenreSorted(String genre);
 }
