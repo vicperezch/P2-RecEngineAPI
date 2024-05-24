@@ -6,14 +6,14 @@ import org.mockito.MockitoAnnotations;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*; // Importa todos los métodos estáticos de Mockito
+import static org.mockito.Mockito.*; 
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach; // Importa la anotación @BeforeEach de JUnit 5
+import org.junit.jupiter.api.BeforeEach; 
 import com.games4u.engine.model.Category;
 import com.games4u.engine.model.Game;
 import com.games4u.engine.model.Genre;
@@ -21,8 +21,7 @@ import com.games4u.engine.repository.CategoryRepository;
 import com.games4u.engine.repository.GameRepository;
 import com.games4u.engine.repository.GenreRepository;
 
-import static org.junit.jupiter.api.Assertions.*; // Importa todos los métodos estáticos de JUnit 5 Assertions
-
+import static org.junit.jupiter.api.Assertions.*; 
 public class GenreServiceTest {
 
      @Mock
