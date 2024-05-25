@@ -19,8 +19,8 @@ public class RecommendationController {
 
 
     @GetMapping("/{email}")
-    public ResponseEntity<List<Game>> getRecommendations(@PathVariable String email) {
-        List<Game> recommendations = recommendationService.recommend(email);
+    public ResponseEntity<List<Game>> getRecommendations(@PathVariable String email, @RequestParam int number) {
+        List<Game> recommendations = recommendationService.recommend(email, number);
 
         if (recommendations == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
