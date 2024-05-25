@@ -60,10 +60,9 @@ public class RecommendationService {
 
         // Busca cada juego en la base de datos y compara con los gustos del usuario
         for (String genre: userGenres) {
-            List<String> gamesToCompare = gameRepository.findByGenreSorted(genre, user.getEmail());
+            List<Game> gamesToCompare = gameRepository.findByGenreSorted(genre, user.getEmail());
 
-            for (String gameTitle : gamesToCompare) {
-                Game game = gameRepository.findById(gameTitle).get();
+            for (Game game : gamesToCompare) {
 
                 double similarityScore = getSimilarity(game, userGenres, userCategories, userPlatforms);
                 similarities.put(game, similarityScore);
@@ -72,11 +71,11 @@ public class RecommendationService {
 
         // Verifica que cumple con la cantidad solicitada
         if (similarities.keySet().size() < numberOfRecommendations) {
-            List<String> games = gameRepository.findGamesSortedByRating(user.getEmail());
+            List<Game> games = gameRepository.findGamesSortedByRating(user.getEmail());
             int count = 0;
 
             while (similarities.keySet().size() < numberOfRecommendations) {
-                Game game = gameRepository.findById(games.get(count)).get();
+                Game game = games.get(count);
 
                 double similarityScore = getSimilarity(game, userGenres, userCategories, userPlatforms);
                 similarities.put(game, similarityScore);
@@ -115,10 +114,9 @@ public class RecommendationService {
         // Calcula un coeficiente para cada juego
         Map<Game, Double> gameCoefficients = new HashMap<>();
         for (int i = 0; i < 3; i++) {
-            List<String> gamesToCompare = gameRepository.findByGenreSorted(genres.get(i), user.getEmail());
+            List<Game> gamesToCompare = gameRepository.findByGenreSorted(genres.get(i), user.getEmail());
 
-            for (String gameTitle: gamesToCompare) {
-                Game game = gameRepository.findById(gameTitle).get();
+            for (Game game: gamesToCompare) {
 
                 double similarityScore = getSimilarity(game, genres, categories, platforms);
                 gameCoefficients.put(game, similarityScore);
@@ -127,11 +125,11 @@ public class RecommendationService {
 
         // Verifica que cumple con la cantidad solicitada
         if (gameCoefficients.keySet().size() < numberOfRecommendations) {
-            List<String> games = gameRepository.findGamesSortedByRating(user.getEmail());
+            List<Game> games = gameRepository.findGamesSortedByRating(user.getEmail());
             int count = 0;
 
             while (gameCoefficients.keySet().size() < numberOfRecommendations) {
-                Game game = gameRepository.findById(games.get(count)).get();
+                Game game = games.get(count);
 
                 double similarityScore = getSimilarity(game, genres, categories, platforms);
                 gameCoefficients.put(game, similarityScore);
