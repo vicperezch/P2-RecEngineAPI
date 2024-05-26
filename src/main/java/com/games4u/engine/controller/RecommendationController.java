@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "https://games4u-54c04.web.app")
 @RestController
 @RequestMapping("api/v1/recommendations")
 public class RecommendationController {
@@ -16,7 +16,6 @@ public class RecommendationController {
     public RecommendationController(RecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
-
 
     @GetMapping("/{email}")
     public ResponseEntity<List<Game>> getRecommendations(@PathVariable String email, @RequestParam int number) {
@@ -27,5 +26,11 @@ public class RecommendationController {
         }
 
         return new ResponseEntity<>(recommendations, HttpStatus.OK);
+    }
+
+    @PostMapping("/covers")
+    public ResponseEntity<Object[]> getRecommendedGamesCovers(@RequestBody List<Game> recommendedGames){
+        Object[] response = recommendationService.recommendedGamesCovers(recommendedGames);
+        return new ResponseEntity<Object[]>(response, HttpStatus.OK);
     }
 }

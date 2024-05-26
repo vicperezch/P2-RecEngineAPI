@@ -14,7 +14,7 @@ import com.games4u.engine.service.UserService;
  * @since 28/04/24
  * Controlador que contiene la funcionalidad CURD de los usuarios
  */
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://games4u-54c04.web.app")
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {

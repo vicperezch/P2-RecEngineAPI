@@ -16,7 +16,7 @@ import java.util.Optional;
  * @since 26/04/2024
  * Controlador que contiene la funcionalidad CRUD para los juegos
  */
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://games4u-54c04.web.app")
 @RestController
 @RequestMapping("api/v1/games")
 public class GameController {

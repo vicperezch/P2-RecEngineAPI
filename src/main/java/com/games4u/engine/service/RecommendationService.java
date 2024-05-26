@@ -4,7 +4,15 @@ import com.games4u.engine.model.*;
 import com.games4u.engine.util.Sorter;
 import com.games4u.engine.repository.GameRepository;
 import com.games4u.engine.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -16,6 +24,10 @@ import java.util.*;
 public class RecommendationService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
+    @Value("${CLIENT-ID}")
+    private String clientID;
+    @Value("${AUTHORIZATION}")
+    private String authorization;
 
     public RecommendationService(GameRepository gameRepository, UserRepository userRepository) {
         this.gameRepository = gameRepository;
@@ -177,5 +189,35 @@ public class RecommendationService {
         total += game.getPlatforms().size();
 
         return intersection / total;
+    }
+
+    /**
+     * Obtiene las covers de las recomendaciones
+     * @param recommendedGames Juegos recomendados
+     * @return Covers de los juegos recomendados
+     */
+    public Object[] recommendedGamesCovers(List<Game> recommendedGames) {
+        String url = "https://api.igdb.com/v4/games";
+        RestTemplate restTemplate = new RestTemplate();
+        StringBuilder names = new StringBuilder("(");
+
+        for (int i = 0; i < recommendedGames.size(); i++) {
+            names.append("\"" + recommendedGames.get(i).getName() + "\"");
+            if (i < recommendedGames.size() - 1) {
+                names.append(",");
+            }
+        }
+        names.append(");");
+
+        String apiQuery = "where name = " + names.toString() + "\nfields name,cover.url;" + "\nlimit 481;";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Client-ID", clientID);
+        headers.set("Authorization", authorization);
+   
+        HttpEntity<String> request = new HttpEntity<>(apiQuery, headers);
+        
+        ResponseEntity<Object[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Object[].class, HttpStatus.OK);
+        return response.getBody();
     }
 }
