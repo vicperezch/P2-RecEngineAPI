@@ -42,9 +42,9 @@ public class UserController {
      * @param id ID del usuario que se busca
      * @return Nodo con el usuario deseado
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable String id) {
-        Optional<User> user = userService.findById(id);
+    @GetMapping("/{email}")
+    public ResponseEntity<User> getUser(@PathVariable String email) {
+        Optional<User> user = userService.findByEmail(email);
 
         if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
@@ -65,9 +65,9 @@ public class UserController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@RequestBody User updatedUser, @PathVariable String id){
-        Optional<User> optionalUser = userService.findById(id);
+    @PutMapping("/{email}")
+    public ResponseEntity<User> updateUserByEmail(@RequestBody User updatedUser, @PathVariable String email){
+        Optional<User> optionalUser = userService.findByEmail(email);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
