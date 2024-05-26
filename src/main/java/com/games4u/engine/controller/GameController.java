@@ -3,13 +3,9 @@ package com.games4u.engine.controller;
 import com.games4u.engine.model.Game;
 import com.games4u.engine.service.GameService;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -119,29 +115,8 @@ public class GameController {
      * @return Arreglo de juegos con sus covers
      */
     @GetMapping("/covers")
-    public ResponseEntity<Object[]> getCovers() {
-        String url = "https://api.igdb.com/v4/games";
-        RestTemplate restTemplate = new RestTemplate();
-        List<Game> allGames = gameService.findAllGames();
-        StringBuilder names = new StringBuilder("(");
-
-        for (int i = 0; i < allGames.size(); i++) {
-            names.append("\"" + allGames.get(i).getName() + "\"");
-            if (i < allGames.size() - 1) {
-                names.append(",");
-            }
-        }
-        names.append(");");
-
-        String apiQuery = "where name = " + names.toString() + "\nfields name,cover.url;" + "\nlimit 500;";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Client-ID", "");
-        headers.set("Authorization", "");
-   
-        HttpEntity<String> request = new HttpEntity<>(apiQuery, headers);
-        
-        ResponseEntity<Object[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Object[].class, HttpStatus.OK);
-        return response;
+    public ResponseEntity<Object[]> getCovers(@RequestParam int start, @RequestParam int end) {
+        Object[] response = gameService.getGameCover(start, end);
+        return new ResponseEntity<Object[]>(response, HttpStatus.OK);
     }
 }
