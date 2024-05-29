@@ -31,7 +31,7 @@ public class RecommendationServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         recommendationService = new RecommendationService(gameRepository, userRepository);
     }
 
@@ -39,7 +39,7 @@ public class RecommendationServiceTest {
     void testRecommendForNonexistentUser() {
         when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
 
-        List<Game> recommendedGames = recommendationService.recommend("nonexistent@example.com");
+        List<Game> recommendedGames = recommendationService.recommend("nonexistent@example.com",15);
 
         assertNull(recommendedGames);
     }
