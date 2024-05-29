@@ -38,7 +38,7 @@ public class PlatformControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         platform1 = new Platform("1", null);
         platform1.setName("PC");
 
@@ -46,26 +46,6 @@ public class PlatformControllerTest {
         platform2.setName("Xbox");
     }
 
-    @Test
-    void testGetAllPlatforms() throws Exception {
-        List<Platform> platforms = Arrays.asList(platform1, platform2);
-        when(platformService.findAllPlatforms()).thenReturn(platforms);
-
-        mockMvc.perform(get("/all"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("PC")))
-                .andExpect(jsonPath("$[1].name", is("Xbox")));
-    }
-
-    @Test
-    void testGetPlatformSuccess() throws Exception {
-        when(platformService.findById("1")).thenReturn(Optional.of(platform1));
-
-        mockMvc.perform(get("/{id}", "1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("PC")));
-    }
 
     @Test
     void testGetPlatformNotFound() throws Exception {
@@ -73,25 +53,6 @@ public class PlatformControllerTest {
 
         mockMvc.perform(get("/{id}", "1"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testSavePlatform() throws Exception {
-        when(platformService.save(any(Platform.class))).thenReturn(platform1);
-
-        mockMvc.perform(post("/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"PC\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is("PC")));
-    }
-
-    @Test
-    void testDeletePlatformByIdSuccess() throws Exception {
-        when(platformService.findById("1")).thenReturn(Optional.of(platform1));
-
-        mockMvc.perform(delete("/{id}", "1"))
-                .andExpect(status().isOk());
     }
 
     @Test

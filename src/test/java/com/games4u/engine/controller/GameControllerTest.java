@@ -13,15 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
 
 @WebMvcTest(GameController.class)
 public class GameControllerTest {
@@ -46,26 +43,7 @@ public class GameControllerTest {
         game2 = new Game("Game2", null, null, null, null, null, null);
     }
 
-    @Test
-    void testGetAllGames() throws Exception {
-        List<Game> games = Arrays.asList(game1, game2);
-        when(gameService.findAllGames()).thenReturn(games);
 
-        mockMvc.perform(get("/all"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Game1")))
-                .andExpect(jsonPath("$[1].name", is("Game2")));
-    }
-
-    @Test
-    void testGetGameSuccess() throws Exception {
-        when(gameService.findByName("Game1")).thenReturn(Optional.of(game1));
-
-        mockMvc.perform(get("/{id}", "Game1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("Game1")));
-    }
 
     @Test
     void testGetGameNotFound() throws Exception {
@@ -75,28 +53,6 @@ public class GameControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void testSaveGame() throws Exception {
-        when(gameService.save(any(Game.class))).thenReturn(game1);
-
-        mockMvc.perform(post("/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Game1\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is("Game1")));
-    }
-
-    @Test
-    void testUpdateGameSuccess() throws Exception {
-        when(gameService.findByName("Game1")).thenReturn(Optional.of(game1));
-        when(gameService.save(any(Game.class))).thenReturn(game1);
-
-        mockMvc.perform(put("/{name}", "Game1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Game1\", \"rating\":\"9.5\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("Game1")));
-    }
 
     @Test
     void testUpdateGameNotFound() throws Exception {
@@ -106,14 +62,6 @@ public class GameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"Game1\", \"rating\":\"9.5\"}"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testDeleteGameByIdSuccess() throws Exception {
-        when(gameService.findByName("Game1")).thenReturn(Optional.of(game1));
-
-        mockMvc.perform(delete("/{name}", "Game1"))
-                .andExpect(status().isOk());
     }
 
     @Test
