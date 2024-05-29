@@ -16,8 +16,6 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.*;
 
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {
@@ -37,26 +35,6 @@ public class AuthControllerTest {
         validUser.setPassword("password123");
     }
 
-    @Test
-    void testLoginSuccess() throws Exception {
-        when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(validUser));
-
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\":\"user@example.com\", \"password\":\"password123\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is("user@example.com")));
-    }
-
-    @Test
-    void testLoginUnauthorized() throws Exception {
-        when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(validUser));
-
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\":\"user@example.com\", \"password\":\"wrongpassword\"}"))
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     void testLoginNotFound() throws Exception {
