@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -39,7 +40,7 @@ public class RecommendationControllerTest {
    
     @Test
     void testGetRecommendationsNotFound() throws Exception {
-        when(recommendationService.recommend(anyString())).thenReturn(null);
+        when(recommendationService.recommend(anyString(),anyInt())).thenReturn(null);
 
         mockMvc.perform(get("/{email}", "test@example.com"))
                 .andExpect(status().isNotFound());
